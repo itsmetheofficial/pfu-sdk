@@ -22,7 +22,7 @@ dependencyResolutionManagement {
 
 ```kotlin
 dependencies {
-    implementation("com.github.itsmetheofficial:pfu-sdk:v1.0.0")
+    implementation("com.github.itsmetheofficial:pfu-sdk:1.0.0")
 }
 ```
 
@@ -147,4 +147,4 @@ This project is licensed under the MIT License.
 
 ## ✨ Developed by
 
-[itsmetheofficial](https://github.com/itsmetheofficial) — Android Developer | Jetpack Compose Enthusiast
+[itsmetheofficial](https://github.com/itsmetheofficial) — Software Development services

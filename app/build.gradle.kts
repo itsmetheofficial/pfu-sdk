@@ -64,3 +64,5 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 }
+/*git tag 1.0.0
+git push origin 1.0.0*/

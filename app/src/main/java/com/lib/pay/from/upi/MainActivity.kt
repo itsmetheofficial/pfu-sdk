@@ -51,11 +51,6 @@ class MainActivity : ComponentActivity(), PaymentCallbacks {
         paymentManager.initialize(this)
         // Set the callback listeners
         paymentManager.setCallbacks(this)
-        // Trigger the API call (for example, create a transaction)
-        /* lifecycleScope.launch {
-             paymentManager.createTransaction(applicationContext, bearerToken = "1|gI3EA9fdWDaxV6vAox36pENIxCkUNnJFjTvxvrUCbb6b3d01",
-                 userName = "test", email = "user@gmail.com", mobile = "8383838383", amount = 100, redirectUrl = "https://google.com")
-         }*/
         setContent {
             LibPayFromUpiTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -82,52 +77,32 @@ class MainActivity : ComponentActivity(), PaymentCallbacks {
 
     override fun onCreateSuccess(response: CreatePaymentResponse) {
         Toast.makeText(this, "onCreateSuccess", Toast.LENGTH_SHORT).show()
-        Log.d("MainActivity", "onCreateSuccess: $response")
+        Log.d("PayFromUpi", "onCreateSuccess: $response")
     }
 
     override fun onCreateFailed(error: String) {
         Toast.makeText(this, "onCreateFailed: $error", Toast.LENGTH_SHORT).show()
-        Log.d("MainActivity", "onCreateFailed: $error")
+        Log.d("PayFromUpi", "onCreateFailed: $error")
     }
 
     override fun onPaymentSuccess(response: String) {
         Toast.makeText(this, "onPaymentSuccess", Toast.LENGTH_SHORT).show()
-        Log.d("MainActivity", "onPaymentSuccess: $response")
-        /*val builder = AlertDialog.Builder(this)
-
-        // Set the title of the dialog
-        builder.setTitle("Payment Successful")
-
-        // Set the message of the dialog, displaying the response
-        builder.setMessage("Response: ${response}")
-
-        // Add a positive button with an action (e.g., dismiss the dialog)
-        builder.setPositiveButton("OK") { dialog, which ->
-            dialog.dismiss() // Dismiss the dialog when the button is clicked
-            // You can add further actions here if needed
-        }
-
-        // Prevent the user from dismissing the dialog by tapping outside
-        builder.setCancelable(false)
-
-        // Create and show the AlertDialog
-        val dialog = builder.create()
-        dialog.show()*/
+        Log.d("PayFromUpi", "onPaymentSuccess: $response")
     }
 
     override fun onPaymentFailed(error: String) {
         Toast.makeText(this, "onPaymentFailed: $error", Toast.LENGTH_SHORT).show()
-        Log.d("MainActivity", "onPaymentFailed: $error")
+        Log.d("PayFromUpi", "onPaymentFailed: $error")
     }
 
     override fun onPaymentSubmitSuccess(response: SubmitPaymentResponse) {
         Toast.makeText(this, "onPaymentSubmitSuccess", Toast.LENGTH_SHORT).show()
-        Log.d("MainActivity", "onPaymentSubmitSuccess: $response")
+        Log.d("PayFromUpi", "onPaymentSubmitSuccess: $response")
     }
 
     override fun onPaymentSubmitFailed(error: String) {
         Toast.makeText(this, "onPaymentSubmitFailed: $error", Toast.LENGTH_SHORT).show()
-        Log.d("MainActivity", "onPaymentSubmitFailed: $error")
+        Log.d("PayFromUpi", "onPaymentSubmitFailed: $error")
     }
 }
 

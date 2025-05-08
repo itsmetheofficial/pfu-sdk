@@ -6,8 +6,8 @@ import com.google.gson.annotations.SerializedName
 data class SubmitPaymentResponse(
     @SerializedName("success")
     @Expose
-    val success: Boolean = false,
-    @SerializedName("paymentApproved")
+    val success: Boolean = true,
+    @SerializedName("payment_approved")
     @Expose
     val paymentApproved: Boolean = false,
     @SerializedName("message")

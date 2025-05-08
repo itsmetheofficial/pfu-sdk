@@ -7,8 +7,7 @@ interface PaymentCallbacks {
     fun onCreateSuccess(response: CreatePaymentResponse)
     fun onCreateFailed(error: String)
 
-    fun onPaymentSuccess(response: String)
-    fun onPaymentFailed(error: String)
+
 
     fun onPaymentSubmitSuccess(response: SubmitPaymentResponse)
     fun onPaymentSubmitFailed(error: String)

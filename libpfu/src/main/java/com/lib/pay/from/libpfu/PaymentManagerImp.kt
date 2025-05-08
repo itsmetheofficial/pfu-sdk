@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import com.lib.pay.from.libpfu.callbacks.PaymentCallbacks
 import com.lib.pay.from.libpfu.di.NetworkModule
@@ -23,7 +24,8 @@ class PaymentManagerImp @Inject constructor(
 ) : PaymentManager {
     private var paymentCallbacks: PaymentCallbacks? = null
     private var resultLauncher: ActivityResultLauncher<Intent>? = null
-
+    private var showDialogs: Boolean = true
+    private var context: Context?=null
     // Initialize with Bearer Token
     override fun initialize(activity: ComponentActivity) {
         activity.setResultLauncher()
@@ -37,24 +39,25 @@ class PaymentManagerImp @Inject constructor(
                     val data: Intent? = result.data
                     val response = data?.getStringExtra("response")
                     //Toast.makeText(this, "RESULT_OK: response ${data?.getStringExtra("response")?:"null"}", Toast.LENGTH_SHORT).show()
-                    Log.d("PaymentManager", "response: $response")
+                   // Log.d("PaymentManager", "response: $response")
                     if (response != null) {
-                        paymentCallbacks?.onPaymentSuccess(response)
+                        //paymentCallbacks?.onPaymentSuccess(response)
                         lifecycleScope.launch {
                             submitPaymentStatus(title = response, description = response)
                         }
                     } else {
-                        paymentCallbacks?.onPaymentFailed("Payment not completed Response is null")
+                        //paymentCallbacks?.onPaymentFailed("Payment not completed Response is null")
                     }
                 } else {
-                    paymentCallbacks?.onPaymentFailed("Payment not completed")
+                    //paymentCallbacks?.onPaymentFailed("Payment not completed")
                 }
             }
     }
 
     // Set callback listeners
-    override fun setCallbacks(callbacks: PaymentCallbacks) {
+    override fun setCallbacks(callbacks: PaymentCallbacks,showBuiltInDialog:Boolean) {
         this.paymentCallbacks = callbacks
+        this.showDialogs = showBuiltInDialog
     }
 
     // Example API call function for creating a transaction
@@ -67,6 +70,7 @@ class PaymentManagerImp @Inject constructor(
         amount: Int,
         redirectUrl: String
     ) {
+        this.context = context
         // Set the Bearer token in the Network module
         NetworkModule.setBearerToken(context, bearerToken)
         // Call the repository to make the API call
@@ -86,6 +90,7 @@ class PaymentManagerImp @Inject constructor(
             },
             onCreateFailed = { error ->
                 paymentCallbacks?.onCreateFailed(error)
+                showDialog(context,"Payment Create Failed!",error)
             }
         )
     }
@@ -97,9 +102,15 @@ class PaymentManagerImp @Inject constructor(
             description = description,
             onPaymentSubmitSuccess = { response ->
                 paymentCallbacks?.onPaymentSubmitSuccess(response)
+                context?.let {
+                    showDialog(it,"Payment Submit Successfully!",response.message)
+                }
             },
             onPaymentSubmitFailed = { error ->
                 paymentCallbacks?.onPaymentSubmitFailed(error)
+                context?.let {
+                    showDialog(it,"Payment Submit Failed!",error)
+                }
             }
         )
     }
@@ -111,12 +122,26 @@ class PaymentManagerImp @Inject constructor(
             if (intent.resolveActivity(context.packageManager) != null) {
                 resultLauncher?.launch(intent)
             } else {
-                paymentCallbacks?.onPaymentFailed("No application available to handle this request!");
+               // paymentCallbacks?.onPaymentFailed("No application available to handle this request!");
             }
         } else {
-            paymentCallbacks?.onPaymentFailed("Invalid payment query url");
+            //paymentCallbacks?.onPaymentFailed("Invalid payment query url");
         }
 
+    }
+
+    fun showDialog(context: Context,title: String,message: String) {
+        if (showDialogs){
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle(title)
+            builder.setMessage(message)
+            builder.setPositiveButton("OK") { dialog, which ->
+                dialog.dismiss()
+            }
+            builder.setCancelable(false)
+            val dialog = builder.create()
+            dialog.show()
+        }
     }
 }
 

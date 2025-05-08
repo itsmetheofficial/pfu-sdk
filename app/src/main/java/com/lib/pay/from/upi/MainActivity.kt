@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity(), PaymentCallbacks {
         // Initialize the PaymentManager with Bearer Token
         paymentManager.initialize(this)
         // Set the callback listeners
-        paymentManager.setCallbacks(this)
+        paymentManager.setCallbacks(callbacks = this,showBuiltInDialog = true)
         setContent {
             LibPayFromUpiTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -72,32 +72,20 @@ class MainActivity : ComponentActivity(), PaymentCallbacks {
     }
 
     override fun onCreateSuccess(response: CreatePaymentResponse) {
-        Toast.makeText(this, "onCreateSuccess", Toast.LENGTH_SHORT).show()
         Log.d("PayFromUpi", "onCreateSuccess: $response")
     }
 
     override fun onCreateFailed(error: String) {
-        Toast.makeText(this, "onCreateFailed: $error", Toast.LENGTH_SHORT).show()
         Log.d("PayFromUpi", "onCreateFailed: $error")
     }
 
-    override fun onPaymentSuccess(response: String) {
-        Toast.makeText(this, "onPaymentSuccess", Toast.LENGTH_SHORT).show()
-        Log.d("PayFromUpi", "onPaymentSuccess: $response")
-    }
 
-    override fun onPaymentFailed(error: String) {
-        Toast.makeText(this, "onPaymentFailed: $error", Toast.LENGTH_SHORT).show()
-        Log.d("PayFromUpi", "onPaymentFailed: $error")
-    }
 
     override fun onPaymentSubmitSuccess(response: SubmitPaymentResponse) {
-        Toast.makeText(this, "onPaymentSubmitSuccess", Toast.LENGTH_SHORT).show()
         Log.d("PayFromUpi", "onPaymentSubmitSuccess: $response")
     }
 
     override fun onPaymentSubmitFailed(error: String) {
-        Toast.makeText(this, "onPaymentSubmitFailed: $error", Toast.LENGTH_SHORT).show()
         Log.d("PayFromUpi", "onPaymentSubmitFailed: $error")
     }
 }

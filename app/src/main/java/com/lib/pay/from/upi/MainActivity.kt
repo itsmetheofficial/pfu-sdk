@@ -55,7 +55,6 @@ class MainActivity : ComponentActivity(), PaymentCallbacks {
                         onPayClick = { bearerToken, username, email, phone, amount, redirectUrl ->
                             lifecycleScope.launch {
                                 paymentManager.createTransaction(
-                                    applicationContext,
                                     bearerToken=bearerToken,
                                     username,
                                     email,
@@ -73,20 +72,24 @@ class MainActivity : ComponentActivity(), PaymentCallbacks {
 
     override fun onCreateSuccess(response: CreatePaymentResponse) {
         Log.d("PayFromUpi", "onCreateSuccess: $response")
+        Toast.makeText(this, "onCreateSuccess", Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateFailed(error: String) {
         Log.d("PayFromUpi", "onCreateFailed: $error")
+        Toast.makeText(this, "$error", Toast.LENGTH_SHORT).show()
     }
 
 
 
     override fun onPaymentSubmitSuccess(response: SubmitPaymentResponse) {
         Log.d("PayFromUpi", "onPaymentSubmitSuccess: $response")
+        Toast.makeText(this, "onPaymentSubmitSuccess", Toast.LENGTH_SHORT).show()
     }
 
     override fun onPaymentSubmitFailed(error: String) {
         Log.d("PayFromUpi", "onPaymentSubmitFailed: $error")
+        Toast.makeText(this, "$error", Toast.LENGTH_SHORT).show()
     }
 }
 
@@ -174,7 +177,7 @@ fun InputScreen(
         Button(
             onClick = {
                 // Handle form submission logic here
-                if (bearerToken.isNotEmpty() && username.isNotEmpty() && email.isNotEmpty() && phone.isNotEmpty() && amount.isNotEmpty() && redirectUrl.isNotEmpty()) {
+                if (bearerToken.isNotEmpty() && username.isNotEmpty() && email.isNotEmpty() && phone.isNotEmpty() && amount.isNotEmpty()) {
                     // Process the form data
                     println(
                         "Form Submitted with the following details: \n" +

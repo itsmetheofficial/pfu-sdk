@@ -10,6 +10,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.lifecycle.lifecycleScope
 import com.lib.pay.from.libpfu.callbacks.PaymentCallbacks
 import com.lib.pay.from.libpfu.di.NetworkModule
@@ -25,9 +26,10 @@ class PaymentManagerImp @Inject constructor(
     private var paymentCallbacks: PaymentCallbacks? = null
     private var resultLauncher: ActivityResultLauncher<Intent>? = null
     private var showDialogs: Boolean = true
-    private var context: Context?=null
+    private var activity: ComponentActivity?=null
     // Initialize with Bearer Token
     override fun initialize(activity: ComponentActivity) {
+        this.activity=activity
         activity.setResultLauncher()
     }
 
@@ -62,7 +64,6 @@ class PaymentManagerImp @Inject constructor(
 
     // Example API call function for creating a transaction
     override suspend fun createTransaction(
-        context: Context,
         bearerToken: String,
         userName: String,
         email: String,
@@ -70,9 +71,8 @@ class PaymentManagerImp @Inject constructor(
         amount: Int,
         redirectUrl: String
     ) {
-        this.context = context
         // Set the Bearer token in the Network module
-        NetworkModule.setBearerToken(context, bearerToken)
+        activity?.applicationContext?.let { NetworkModule.setBearerToken(it, bearerToken) }
         // Call the repository to make the API call
         paymentRepository.createTransaction(
             requestModel = CreatePaymentRequestModel(
@@ -86,11 +86,11 @@ class PaymentManagerImp @Inject constructor(
             ),
             onCreateSuccess = { response ->
                 paymentCallbacks?.onCreateSuccess(response)
-                openQueryUrl(context = context, url = response.data?.queryUrl)
+                activity?.let { openQueryUrl(context = it, url = response.data?.queryUrl) }
             },
             onCreateFailed = { error ->
                 paymentCallbacks?.onCreateFailed(error)
-                showDialog(context,"Payment Create Failed!",error)
+                showDialog("Payment Create Failed!",error)
             }
         )
     }
@@ -102,14 +102,14 @@ class PaymentManagerImp @Inject constructor(
             description = description,
             onPaymentSubmitSuccess = { response ->
                 paymentCallbacks?.onPaymentSubmitSuccess(response)
-                context?.let {
-                    showDialog(it,"Payment Submit Successfully!",response.message)
+                activity?.let {
+                    showDialog("Payment Submit Successfully!",response.message)
                 }
             },
             onPaymentSubmitFailed = { error ->
                 paymentCallbacks?.onPaymentSubmitFailed(error)
-                context?.let {
-                    showDialog(it,"Payment Submit Failed!",error)
+                activity?.let {
+                    showDialog(title="Payment Submit Failed!", message = error)
                 }
             }
         )
@@ -129,10 +129,11 @@ class PaymentManagerImp @Inject constructor(
         }
 
     }
+    fun showDialog(title: String,message: String) {
+        if (showDialogs && activity!=null &&  !activity!!.isFinishing){
+            val themedContext = ContextThemeWrapper(activity, androidx.appcompat.R.style.Theme_AppCompat_Light_Dialog_Alert)
 
-    fun showDialog(context: Context,title: String,message: String) {
-        if (showDialogs){
-            val builder = AlertDialog.Builder(context)
+            val builder = AlertDialog.Builder(themedContext)
             builder.setTitle(title)
             builder.setMessage(message)
             builder.setPositiveButton("OK") { dialog, which ->

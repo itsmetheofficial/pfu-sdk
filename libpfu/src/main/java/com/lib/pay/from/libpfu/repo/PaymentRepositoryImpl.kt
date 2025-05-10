@@ -46,12 +46,8 @@ class PaymentRepositoryImpl @Inject constructor(private val apiService: ApiServi
             val response = apiService.submitPaymentStatus(title, description)
             if (response.isSuccessful) {
                 response.body()?.let {
-                    if(it.success){
-                        if (it.paymentApproved){
-                            onPaymentSubmitSuccess(it)
-                        }else{
-                            onPaymentSubmitFailed(it.message)
-                        }
+                    if (it.message.contains("RES 200")){
+                        onPaymentSubmitSuccess(it)
                     }else{
                         onPaymentSubmitFailed(it.message)
                     }

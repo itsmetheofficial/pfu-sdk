@@ -22,7 +22,7 @@ dependencyResolutionManagement {
 
 ```kotlin
 dependencies {
-    implementation("com.github.itsmetheofficial:pfu-sdk:1.0.0")
+    implementation("com.github.itsmetheofficial:pfu-sdk:1.0.1")
 }
 ```
 
@@ -110,14 +110,6 @@ override fun onCreateSuccess(response: CreatePaymentResponse) {
 
 override fun onCreateFailed(error: String) {
     Log.e("PayFromUPI", "Create Failed: $error")
-}
-
-override fun onPaymentSuccess(response: String) {
-    Log.d("PayFromUPI", "Payment Success: $response")
-}
-
-override fun onPaymentFailed(error: String) {
-    Log.e("PayFromUPI", "Payment Failed: $error")
 }
 
 override fun onPaymentSubmitSuccess(response: SubmitPaymentResponse) {

@@ -22,7 +22,7 @@ dependencyResolutionManagement {
 
 ```kotlin
 dependencies {
-    implementation("com.github.itsmetheofficial:pfu-sdk:1.0.1")
+    implementation("com.github.itsmetheofficial:pfu-sdk:1.0.2")
 }
 ```
 

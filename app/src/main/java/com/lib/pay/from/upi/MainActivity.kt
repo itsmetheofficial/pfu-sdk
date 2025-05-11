@@ -25,25 +25,23 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
-import com.lib.pay.from.libpfu.PaymentManager
+import com.lib.pay.from.libpfu.PaymentManagerImp
 import com.lib.pay.from.libpfu.callbacks.PaymentCallbacks
 import com.lib.pay.from.libpfu.models.CreatePaymentResponse
 import com.lib.pay.from.libpfu.models.SubmitPaymentResponse
 import com.lib.pay.from.upi.ui.theme.LibPayFromUpiTheme
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@AndroidEntryPoint
+
 class MainActivity : ComponentActivity(), PaymentCallbacks {
-    @Inject
-    lateinit var paymentManager: PaymentManager
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         // Initialize the PaymentManager with Bearer Token
+       val paymentManager= PaymentManagerImp()
         paymentManager.initialize(this)
         // Set the callback listeners
         paymentManager.setCallbacks(callbacks = this,showBuiltInDialog = true)

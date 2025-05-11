@@ -4,10 +4,9 @@ import com.lib.pay.from.libpfu.models.CreatePaymentRequestModel
 import com.lib.pay.from.libpfu.models.CreatePaymentResponse
 import com.lib.pay.from.libpfu.models.SubmitPaymentResponse
 import com.lib.pay.from.libpfu.service.ApiService
-import javax.inject.Inject
 
 
-class PaymentRepositoryImpl @Inject constructor(private val apiService: ApiService) : PaymentRepository {
+class PaymentRepositoryImpl(private val apiService: ApiService) : PaymentRepository {
 
     override suspend fun createTransaction(
         requestModel: CreatePaymentRequestModel,

@@ -4,8 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,20 +13,17 @@ import androidx.lifecycle.lifecycleScope
 import com.lib.pay.from.libpfu.callbacks.PaymentCallbacks
 import com.lib.pay.from.libpfu.di.NetworkModule
 import com.lib.pay.from.libpfu.models.CreatePaymentRequestModel
-import com.lib.pay.from.libpfu.repo.PaymentRepository
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 
-class PaymentManagerImp @Inject constructor(
-    private val paymentRepository: PaymentRepository
-) : PaymentManager {
+class PaymentManagerImp  : PaymentManager {
     private var paymentCallbacks: PaymentCallbacks? = null
     private var resultLauncher: ActivityResultLauncher<Intent>? = null
     private var showDialogs: Boolean = true
     private var activity: ComponentActivity?=null
     // Initialize with Bearer Token
     override fun initialize(activity: ComponentActivity) {
+        NetworkModule.init(activity)
         this.activity=activity
         activity.setResultLauncher()
     }
@@ -74,7 +69,7 @@ class PaymentManagerImp @Inject constructor(
         // Set the Bearer token in the Network module
         activity?.applicationContext?.let { NetworkModule.setBearerToken(it, bearerToken) }
         // Call the repository to make the API call
-        paymentRepository.createTransaction(
+        NetworkModule.getPaymentRepository().createTransaction(
             requestModel = CreatePaymentRequestModel(
                 from = "SDK_DIRECT_INTENT",
                 type = "any",
@@ -97,7 +92,7 @@ class PaymentManagerImp @Inject constructor(
 
     // Example of another API call for submitting payment status
     private suspend fun submitPaymentStatus(title: String, description: String) {
-        paymentRepository.submitPaymentStatus(
+        NetworkModule.getPaymentRepository().submitPaymentStatus(
             title = title,
             description = description,
             onPaymentSubmitSuccess = { response ->

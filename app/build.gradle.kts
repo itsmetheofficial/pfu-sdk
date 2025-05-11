@@ -61,8 +61,8 @@ dependencies {
     // Hilt for dependency injection
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-    //implementation(project(":libpfu"))
-    implementation(libs.pfu.sdk)
+    implementation(project(":libpfu"))
+    //implementation(libs.pfu.sdk)
 }
 /*git tag 1.0.0
 git push origin 1.0.0*/

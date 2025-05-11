@@ -16,7 +16,20 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Qualifier
 import javax.inject.Singleton
+
+
+
+
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class PaymentOkHttp
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class PaymentRetrofit
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -24,9 +37,10 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    @PaymentOkHttp
     fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient {
         val interceptor = Interceptor { chain ->
-            val token = getBearerToken(context)  // Retrieve token from shared preferences or wherever it's stored
+            val token = getBearerToken(context)
             val request = chain.request().newBuilder()
                 .addHeader("Authorization", "Bearer $token")
                 .build()
@@ -40,9 +54,10 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    @PaymentRetrofit
+    fun provideRetrofit(@PaymentOkHttp okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://payfromupi.com/api/")  // Replace with your base URL
+            .baseUrl("https://payfromupi.com/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
@@ -50,7 +65,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService {
+    fun provideApiService(@PaymentRetrofit retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
     }
 
@@ -59,35 +74,24 @@ object NetworkModule {
     fun providePaymentRepository(apiService: ApiService): PaymentRepository {
         return PaymentRepositoryImpl(apiService)
     }
+
     @Provides
     @Singleton
     fun providePaymentManager(repo: PaymentRepository): PaymentManager {
         return PaymentManagerImp(repo)
     }
 
-
-    // Function to get the Bearer token, you can change this to your token retrieval logic
     private fun getBearerToken(context: Context): String {
-        // You can use SharedPreferences, secure storage, etc. to retrieve the token
-        // Here is an example with SharedPreferences:
         val sharedPreferences = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
         return sharedPreferences.getString("bearer_token", "") ?: ""
     }
+
     fun setBearerToken(context: Context, token: String) {
         val sharedPreferences = context.getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {
             putString("bearer_token", token)
-            apply() // or commit()
+            apply()
         }
     }
-
 }
 
-
-/*@Module
-@InstallIn(SingletonComponent::class)
-abstract class NetworkConfigModule {
-    @Binds
-    abstract fun bindPaymentManagerProvider(impl: PaymentManagerImp): PaymentManager
-
-}*/

@@ -9,7 +9,7 @@ data class CreatePaymentResponse(
     val success: Boolean = false,
     @SerializedName("message")
     @Expose
-    val message: String,
+    val message: String="",
     @SerializedName("data")
     @Expose
     val data: Data?=null,
@@ -17,16 +17,16 @@ data class CreatePaymentResponse(
     data class Data(
         @SerializedName("paymentLink")
         @Expose
-        val paymentLink: String,
+        val paymentLink: String="",
         @SerializedName("queryUrl")
         @Expose
-        val queryUrl: String,
+        val queryUrl: String="",
         @SerializedName("txnId")
         @Expose
-        val txnId: String,
+        val txnId: String="",
         @SerializedName("qyeryUrl")
         @Expose
-        val qyeryUrl: String,
+        val qyeryUrl: String="",
     )
 }
 

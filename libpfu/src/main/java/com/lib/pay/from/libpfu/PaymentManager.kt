@@ -1,6 +1,5 @@
 package com.lib.pay.from.libpfu
 
-import android.content.Context
 import androidx.activity.ComponentActivity
 import com.lib.pay.from.libpfu.callbacks.PaymentCallbacks
 

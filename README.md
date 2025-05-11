@@ -22,35 +22,28 @@ dependencyResolutionManagement {
 
 ```kotlin
 dependencies {
-    implementation("com.github.itsmetheofficial:pfu-sdk:1.0.2")
+    implementation("com.github.itsmetheofficial:pfu-sdk:1.0.4")
 }
 ```
 
 ---
 
-## 🧠 Prerequisites
-
-- Your project must use **Hilt** for dependency injection.
-- Annotate your `Application` class with `@HiltAndroidApp`.
-- Annotate your `Activity` or `Fragment` with `@AndroidEntryPoint`.
-
----
 
 ## 🚀 How to Use
 
-### Step 1: Inject and initialize `PaymentManager`
+### Step 1:  initialize `PaymentManager`
 
 ```kotlin
 @AndroidEntryPoint
 class MainActivity : ComponentActivity(), PaymentCallbacks {
-
-    @Inject
+    
     lateinit var paymentManager: PaymentManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Initialize PaymentManager
+        paymentManager = PaymentManagerImp()
         paymentManager.initialize(this)
 
         // Set the callbacks

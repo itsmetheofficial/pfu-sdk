@@ -19,3 +19,20 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Keep model classes used by Gson
+-keep class com.lib.pay.from.libpfu.models.** { *; }
+
+# Keep parameter names for Kotlin (needed for default args)
+-keepattributes Signature, InnerClasses, EnclosingMethod, RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations, AnnotationDefault
+
+# Gson-specific rule to keep no-arg constructors
+-keep class sun.misc.Unsafe { *; }
+-keepclassmembers class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+
+# Keep data class constructors
+-keepclassmembers class * {
+    public <init>(...);
+}

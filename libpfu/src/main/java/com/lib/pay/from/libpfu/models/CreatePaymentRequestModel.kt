@@ -25,7 +25,7 @@ data class CreatePaymentRequestModel(
     val amount: Int,
     @SerializedName("redirect_url")
     @Expose
-    val redirectUrl: String,
+    val redirectUrl: String="",
     @SerializedName("webhook_url_id")
     @Expose
     val webhookUrlId: Int = 1

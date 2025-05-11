@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity(), PaymentCallbacks {
         paymentManager= PaymentManagerImp()
         paymentManager.initialize(this)
         // Set the callback listeners
-        paymentManager.setCallbacks(callbacks = this,showBuiltInDialog = true)
+        paymentManager.setCallbacks(callbacks = this)
         setContent {
             LibPayFromUpiTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->

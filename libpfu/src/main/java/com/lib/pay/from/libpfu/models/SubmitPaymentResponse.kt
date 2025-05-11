@@ -10,6 +10,6 @@ data class SubmitPaymentResponse(
     val isSuccessful: Int =0,
     @SerializedName("message")
     @Expose
-    val message: String
+    val message: String = ""
 )
 
